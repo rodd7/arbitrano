@@ -1,17 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+
 import time
 from collections import defaultdict
 
 def main():
     CHROME_PATH = "C:\Program Files\chromedriver_win32\chromedriver.exe"
-
-    SPORTSBET = "https://www.sportsbet.com.au/betting/tennis" # POSITION 0
-    TAB = "https://www.tab.com.au/sports/betting/Tennis" # POSITION 1 CURRENTLY DIFFICULT TO DO
-    POINTSBET = "https://pointsbet.com.au/sports/tennis/" # POSITION 2
-
-    weblist = [SPORTSBET, TAB, POINTSBET]
     data = defaultdict(list)
 
 
@@ -20,38 +17,56 @@ def main():
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
     options.add_argument('--ignore-certificate-errors-spki-list')
+    driver.maximize_window()
 
-    driver.get(SPORTSBET)
-    players = driver.find_elements_by_css_selector("span[data-automation-id*='outcome-name']")
-    numbers = driver.find_elements_by_css_selector("span[data-automation-id*='price-text']")
+    sportsbet(driver, data)
+    time.sleep(2)
+    # pointsbet(driver, data)
+    # time.sleep(3)
+    # ladbrokes(driver, data)
+    # time.sleep(7)
     
-            
-    for x in range(len(players)):
-        data[players[x].text] = [numbers[x].text]
-        
 
-    driver.get(POINTSBET)
-    time.sleep(3)
-
-    players = driver.find_elements_by_css_selector("span[class='f5rl2hl']")
-    numbers = driver.find_elements_by_css_selector("span[class='fheif50']")
-
-    for x in range(len(players)):
-        data[players[x].text].append(numbers[x].text)
-
-
-    print(data)
-
+    # sortedDict = dict(sorted(data.items(), key=lambda x: x[0].lower()) ) #this will sort our players
+    for k, v in data.items():
+        print(k, v)
 
     driver.quit()
 
 
 
-def sportsbet():
-    return
+def sportsbet(driver, data):
+    driver.get('https://www.sportsbet.com.au/betting/tennis')
+    #all bt click in and out for each one
+    # driver.execute_script("window.history.go(-1)")
+   
+    # driver.find_element(By.XPATH, "/html/body/span/div/div/div[2]/div/div[3]/div/div/div[1]/div/div/div/div/div[1]/div[2]/div[2]/ul/li[1]/div/div/a/div/div[2]/span").click()
+    
+
+    players = driver.find_elements(By.CSS_SELECTOR,"span[data-automation-id*='outcome-name']")
+    numbers = driver.find_elements(By.CSS_SELECTOR,"span[data-automation-id*='price-text']")
+    storeData (players, numbers, data)
+
+def pointsbet(driver, data):
+    driver.get('https://pointsbet.com.au/sports/tennis')
+    players = driver.find_elements(By.CSS_SELECTOR,"span[class='f5rl2hl']")
+    numbers = driver.find_elements(By.CSS_SELECTOR,"span[class='fheif50']")
+    storeData (players, numbers, data)
+
+def ladbrokes(driver, data):
+    driver.get('https://www.ladbrokes.com.au/sports/tennis')
+    players = driver.find_elements(By.CSS_SELECTOR,"span[class='displayTitle']")
+    numbers = driver.find_elements(By.CSS_SELECTOR,"div[class='price-button-odds-price']")
+    storeData (players, numbers, data)
+
+def storeData (players, numbers, data):
+    for x in range(len(players)):
+        data[players[x].text].append(numbers[x].text)
+
 
 def highestReturn (player):
     return max(player)
+
 
 
 
