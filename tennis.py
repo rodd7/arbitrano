@@ -2,30 +2,29 @@ import requests
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
+import selenium
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
 
 import time
 from collections import defaultdict
 
 def main():
-    CHROME_PATH = "C:\Program Files\chromedriver_win32\chromedriver.exe"
+    # CHROME_PATH = "C:\Program Files\chromedriver_win32\chromedriver.exe"
+    CHROME_PATH = "/usr/local/bin/chromedriver" #mac version
     data = defaultdict(list)
 
-
-    driver = webdriver.Chrome(executable_path=CHROME_PATH)
+    initDriver = Service(CHROME_PATH)
+    driver = webdriver.Chrome(service=initDriver)
     options = webdriver.ChromeOptions()
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
     options.add_argument('--ignore-certificate-errors-spki-list')
-    driver.maximize_window()
+    options.add_argument('--start-maximized')
 
     sportsbet(driver, data)
-    time.sleep(2)
     # pointsbet(driver, data)
-    # time.sleep(3)
     # ladbrokes(driver, data)
-    # time.sleep(7)
-    
 
     # sortedDict = dict(sorted(data.items(), key=lambda x: x[0].lower()) ) #this will sort our players
     for k, v in data.items():
@@ -37,6 +36,7 @@ def main():
 
 def sportsbet(driver, data):
     driver.get('https://www.sportsbet.com.au/betting/tennis')
+    time.sleep(3)
     #all bt click in and out for each one
     # driver.execute_script("window.history.go(-1)")
    
@@ -49,12 +49,14 @@ def sportsbet(driver, data):
 
 def pointsbet(driver, data):
     driver.get('https://pointsbet.com.au/sports/tennis')
+    time.sleep(3)
     players = driver.find_elements(By.CSS_SELECTOR,"span[class='f5rl2hl']")
     numbers = driver.find_elements(By.CSS_SELECTOR,"span[class='fheif50']")
     storeData (players, numbers, data)
 
 def ladbrokes(driver, data):
     driver.get('https://www.ladbrokes.com.au/sports/tennis')
+    time.sleep(3)
     players = driver.find_elements(By.CSS_SELECTOR,"span[class='displayTitle']")
     numbers = driver.find_elements(By.CSS_SELECTOR,"div[class='price-button-odds-price']")
     storeData (players, numbers, data)
