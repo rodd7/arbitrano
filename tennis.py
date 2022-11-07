@@ -2,7 +2,6 @@ import requests
 from bs4 import BeautifulSoup
 
 from selenium import webdriver
-import selenium
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 
@@ -20,7 +19,6 @@ def main():
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
     options.add_argument('--ignore-certificate-errors-spki-list')
-    options.add_argument('--start-maximized')
 
     sportsbet(driver, data)
     # pointsbet(driver, data)
@@ -68,9 +66,6 @@ def storeData (players, numbers, data):
 
 def highestReturn (player):
     return max(player)
-
-
-
 
 
 
