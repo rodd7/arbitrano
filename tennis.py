@@ -24,8 +24,8 @@ def main():
     options.add_argument('--ignore-certificate-errors-spki-list')
 
     sportsbet(driver, data)
-    pointsbet(driver, data)
-    ladbrokes(driver, data)
+    # pointsbet(driver, data)
+    ladbrokes(driver, data, urlCount)
     print(data)
     # sortedDict = dict(sorted(data.items(), key=lambda x: x[0].lower()) ) #this will sort our players
     
@@ -38,7 +38,7 @@ def main():
 def initialScrape(URL, playerSelector, oddSelector, data):
     driver.get(URL)
     time.sleep(3)
-    storeData(URL, driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
+    initStore(URL, driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
 
 
 
@@ -53,7 +53,7 @@ def sportsbet(driver, data):
 
     players = driver.find_elements(By.CSS_SELECTOR,"span[data-automation-id*='outcome-name']")
     numbers = driver.find_elements(By.CSS_SELECTOR,"span[data-automation-id*='price-text']")
-    storeData(players, numbers, data)
+    initStore(players, numbers, data)
 
 
 def pointsbet(driver, data):
@@ -61,21 +61,32 @@ def pointsbet(driver, data):
     time.sleep(3)
     players = driver.find_elements(By.CSS_SELECTOR,"span[class='f5rl2hl']")
     numbers = driver.find_elements(By.CSS_SELECTOR,"span[class='fheif50']")
-    storeData(players, numbers, data)
+    initStore(players, numbers, data)
 
-def ladbrokes(driver, data):
+def ladbrokes(driver, data, urlCount):
+    urlCount = 2
     driver.get('https://www.ladbrokes.com.au/sports/tennis')
     time.sleep(3)
     players = driver.find_elements(By.CSS_SELECTOR,"span[class='displayTitle']")
     numbers = driver.find_elements(By.CSS_SELECTOR,"div[class='price-button-odds-price']")
-    storeData(players, numbers, data)
+    initStore(players, numbers, data)
 
-def storeData (players, numbers, data):
+def initStore(players, numbers, data):
     for x in range(len(players)):
         data[players[x].text].append(numbers[x].text)
 
+def store(players, numbers, data):
+    for player in range(len(data)):
+        if players[player].text in data:
+            data[players[player].text].append(numbers[player].text)
+        else:
+            data[players[player].text].append('0.00')
 
 
+
+
+#if the keys exists, append to the array of values
+#else create a new one and add zeroes until the required value in position
 
 
 # https://marktheballot.blogspot.com/2018/06/the-dramas-of-daily-web-scraper.html
