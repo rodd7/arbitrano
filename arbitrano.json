@@ -1,0 +1,22 @@
+{
+	"betters": [
+		{
+			"better": "Sportsbet",
+			"URL": "https://www.sportsbet.com.au/betting/tennis",
+			"playerSelector": "span[data-automation-id*='outcome-name']",
+			"oddSelector": "span[data-automation-id*='price-text']"
+		},
+		{
+			"better": "PointsBet",
+			"URL": "https://pointsbet.com.au/sports/tennis",
+			"playerSelector": "span[class='f5rl2hl']",
+			"oddSelector": "span[class='fheif50']"
+		},
+		{
+			"better": "Ladbrokes",
+			"URL": "https://www.ladbrokes.com.au/sports/tennis",
+			"playerSelector": "span[class='displayTitle']",
+			"oddSelector": "div[class='price-button-odds-price']"
+		}
+	]
+}
