@@ -10,6 +10,7 @@ from selenium.common.exceptions import TimeoutException
 import time
 from collections import defaultdict
 import json
+from arbitrage import *
 
 CHROME_PATH = "C:\Program Files\chromedriver_win32\chromedriver.exe"
 # CHROME_PATH = "/usr/local/bin/chromedriver" #mac version
@@ -35,30 +36,31 @@ def main():
     setURLSize(len(arbitrano['betters']))
     for better in arbitrano['betters']:
         initialScrape(better['URL'], better['playerSelector'], better['oddSelector'], data)
+
         if (better['URL'] == 'https://pointsbet.com.au/sports/tennis'):
-            driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain3TabButton']").click()
-            time.sleep(2)
-            numEvents = driver.find_element(By.CSS_SELECTOR,"div[identifier='sports_default_sports-all-comps'").find_elements(By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")
+            driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain1TabButton']").click()
+            additionalScrape(better['playerSelector'], better['oddSelector'], data)
 
-            for element in range(0, len(numEvents)):
-                test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")))
-                print(element)
-                # while True:
-                #     try:
-                #         if element == 0:
-                #             test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,"//*[@id=\"mainContent\"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[1]/div/div/a/div/div[2]")))
-                #         else:
-                #             test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,"//*[@id=\"mainContent\"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[2]/div/div/a[" + str(element) + "]/div/div[2]")))
-                #     except TimeoutException:
-                #         newSection+=1
-                #         continue
-                #     break
+            # numEvents = driver.find_element(By.CSS_SELECTOR,"div[identifier='sports_default_sports-all-comps'").find_elements(By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")
 
-                test.click()
-                time.sleep(1)
-                driver.back()
-                driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain3TabButton']").click()
+            # for element in range(0, len(numEvents)):
+            #     test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")))
+            #     print(element)
+            #     # while True:
+            #     #     try:
+            #     #         if element == 0:
+            #     #             test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,"//*[@id=\"mainContent\"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[1]/div/div/a/div/div[2]")))
+            #     #         else:
+            #     #             test = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,"//*[@id=\"mainContent\"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[2]/div/div/a[" + str(element) + "]/div/div[2]")))
+            #     #     except TimeoutException:
+            #     #         newSection+=1
+            #     #         continue
+            #     #     break
 
+            #     numEvents[element].click()
+            #     time.sleep(1)
+            #     driver.back()
+            #     driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain2TabButton']").click()
 
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[1]/div/div/a
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[2]/div/div/a[1]
@@ -73,8 +75,8 @@ def main():
     count = 0
     for k, v in data.items():
         count+=1
-        print(k, v)
-        print(count)
+        print(count, "= ", k, v)
+    
 
     driver.quit()
 
@@ -90,9 +92,13 @@ def initialScrape(URL, playerSelector, oddSelector, data):
     driver.get(URL)
     time.sleep(3)
     setURLCount()
-    initStore(driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
+    store(driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
 
-def initStore(players, numbers, data):
+def additionalScrape(playerSelector, oddSelector, data):
+    time.sleep(3)
+    store(driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
+
+def store(players, numbers, data):
     for x in range(len(players)):
         if not data[players[x].text]:
             data[players[x].text] = ['0.00'] * URLSize
@@ -100,6 +106,13 @@ def initStore(players, numbers, data):
         for y in range(len(data[players[x].text])):
             if y == URLCount:
                 data[players[x].text][y] = numbers[x].text
+
+class CaseInsensitiveDict(dict):
+    def __setitem__(self, key, value):
+        super(CaseInsensitiveDict, self).__setitem__(key.lower(), value)
+
+    def __getitem__(self, key):
+        return super(CaseInsensitiveDict, self).__getitem__(key.lower())
 
 # def initStore(players, numbers, data):
 #     print(URLSize)
