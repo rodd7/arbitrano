@@ -9,6 +9,7 @@ from selenium.common.exceptions import TimeoutException
 
 import time
 from collections import defaultdict
+import collections
 import json
 from arbitrage import *
 
@@ -19,6 +20,7 @@ URLSize = 0
 URLCount = -1
 
 def main():
+
     data = defaultdict(list)
     initDriver = Service(CHROME_PATH)
     
@@ -37,9 +39,9 @@ def main():
     for better in arbitrano['betters']:
         initialScrape(better['URL'], better['playerSelector'], better['oddSelector'], data)
 
-        if (better['URL'] == 'https://pointsbet.com.au/sports/tennis'):
-            driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain1TabButton']").click()
-            additionalScrape(better['playerSelector'], better['oddSelector'], data)
+        # if (better['URL'] == 'https://pointsbet.com.au/sports/tennis'):
+        #     driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain1TabButton']").click()
+        #     additionalScrape(better['playerSelector'], better['oddSelector'], data)
 
             # numEvents = driver.find_element(By.CSS_SELECTOR,"div[identifier='sports_default_sports-all-comps'").find_elements(By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")
 
@@ -69,13 +71,17 @@ def main():
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[4]/div/div/a
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[5]/div/div/a
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[6]/div/div/a[1]
-            
+
+
+        #   https://www.neds.com.au/sports/tennis  
 
     # print(data)
     count = 0
     for k, v in data.items():
         count+=1
         print(count, "= ", k, v)
+    
+    scanDuplicates(data)
     
 
     driver.quit()
@@ -98,29 +104,39 @@ def additionalScrape(playerSelector, oddSelector, data):
     time.sleep(3)
     store(driver.find_elements(By.CSS_SELECTOR,playerSelector), driver.find_elements(By.CSS_SELECTOR,oddSelector), data)
 
+# def store(players, numbers, data):
+#     for x in range(len(players)):
+#         if not data[players[x].text]:
+#             data[players[x].text] = ['0.00'] * URLSize
+
+#         for y in range(len(data[players[x].text])):
+#             if y == URLCount:
+#                 data[players[x].text][y] = numbers[x].text
+
 def store(players, numbers, data):
     for x in range(len(players)):
-        if not data[players[x].text]:
-            data[players[x].text] = ['0.00'] * URLSize
+        uppercase = str(players[x].text).upper()
+        if not data[uppercase]:
+            data[uppercase] = ['0.00'] * URLSize
 
-        for y in range(len(data[players[x].text])):
+        for y in range(len(uppercase)):
             if y == URLCount:
-                data[players[x].text][y] = numbers[x].text
-
-class CaseInsensitiveDict(dict):
-    def __setitem__(self, key, value):
-        super(CaseInsensitiveDict, self).__setitem__(key.lower(), value)
-
-    def __getitem__(self, key):
-        return super(CaseInsensitiveDict, self).__getitem__(key.lower())
+                data[uppercase][y] = numbers[x].text
 
 # def initStore(players, numbers, data):
 #     print(URLSize)
 #     for x in range(len(players)):
 #         data[players[x].text].append(numbers[x].text)
 
+def scanDuplicates(data):
+    names = []
+    for players in data:
+        name = str(players).split()
+        names.append(name[-1])
+    
+    print([item for item, count in collections.Counter(names).items() if count > 1])
 
-# https://marktheballot.blogspot.com/2018/06/the-dramas-of-daily-web-scraper.html
+  
 
 if __name__ == "__main__":
     main()

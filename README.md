@@ -9,3 +9,7 @@
 ## Applications
 
 chromedriver (declare own path into a CHROME_PATH variable)
+
+## Applications
+
+- SportsBet is last as there is a tendancy to print out Initials for the first name, distorting and creating new dictionary entries
