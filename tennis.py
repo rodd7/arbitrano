@@ -73,7 +73,27 @@ def main():
 # //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[6]/div/div/a[1]
 
 
-        #   https://www.neds.com.au/sports/tennis  
+# bet365
+
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[2]/span
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[2]/span
+
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[3]/span
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[3]/span
+
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[4]/span
+# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[4]/span
+# .
+
+
+# {
+# 			"better": "Bet365",
+# 			"URL": "https://www.bet365.com.au/#/AC/B13/C1/D50/E2/F163/",
+# 			"playerSelector": "div[class='rcl-ParticipantFixtureDetailsTeam_TeamName']",
+# 			"oddSelector": "span[data-testid='price-button-odds']"
+# 		}
+
+
 
     # print(data)
     count = 0
@@ -136,7 +156,25 @@ def scanDuplicates(data):
     
     print([item for item, count in collections.Counter(names).items() if count > 1])
 
-  
+    # if no '/' in key value
+    # if first name is one letter and letter of name[0] == first letter of name[-1], merge
+
+def firstnameCheck(player, data):
+    player = str(player).split()
+    first = player[0]
+    last = player[-1]
+
+    if len(first) > 1:
+        return 0
+
+    for player in data:
+        target = str(player).split()
+        targetFirst = target[0]
+        targetLast = target[-1]
+        if targetFirst == first and targetLast == last:
+            return 1
+
+# https://marktheballot.blogspot.com/2018/06/the-dramas-of-daily-web-scraper.html
 
 if __name__ == "__main__":
     main()
