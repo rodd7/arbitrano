@@ -43,6 +43,10 @@ def main():
         #     driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain1TabButton']").click()
         #     additionalScrape(better['playerSelector'], better['oddSelector'], data)
 
+        # need to reapproach ^^ messing everything up
+
+
+
             # numEvents = driver.find_element(By.CSS_SELECTOR,"div[identifier='sports_default_sports-all-comps'").find_elements(By.CSS_SELECTOR,"div[class='f2nndsr f1d8xtm1']")
 
             # for element in range(0, len(numEvents)):
@@ -63,28 +67,6 @@ def main():
             #     time.sleep(1)
             #     driver.back()
             #     driver.find_element(By.CSS_SELECTOR,"button[data-test='sportsSportsMain2TabButton']").click()
-
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[1]/div/div/a
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[2]/div/div/a[1]
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[2]/div/div/a[2]
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[3]/div/div/a
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[4]/div/div/a
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[5]/div/div/a
-# //*[@id="mainContent"]/div[1]/div/div[2]/div/div/div/div[3]/div/section[6]/div/div/a[1]
-
-
-# bet365
-
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[2]/span
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[2]/span
-
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[3]/span
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[3]/span
-
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[2]/div[4]/span
-# /html/body/div[1]/div/div[4]/div[2]/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div/div[1]/div[2]/div/div[3]/div[4]/span
-# .
-
 
 # {
 # 			"better": "Bet365",
