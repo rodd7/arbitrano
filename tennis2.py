@@ -8,9 +8,10 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from selenium.common.exceptions import ElementClickInterceptedException
+# from selenium.common.exceptions import ElementClickInterceptedException
 
 import time
+from collections import namedtuple
 
 #########################  WEBDRIVER SOURCE  #########################
 CHROME_PATH = "C:\Program Files\chromedriver_win32\chromedriver.exe"
@@ -22,7 +23,11 @@ def main():
     initDriver = Service(CHROME_PATH)
     global driver
 
-    data = {}
+    data = []
+    Game = namedtuple(
+        "Game",
+        ["tournament_name", "person1", "person1_odds", "person2", "person2_odds"],
+    )
     webindex = 0
 
     driver = webdriver.Chrome(service=initDriver)
@@ -47,7 +52,7 @@ def main():
     scrollLevel = 0
     wait = WebDriverWait(driver, 10)
 
-    for x in range(len(tournamentLists)):
+    for x in range(3):
         try:
             if x > 0:
                 driver.execute_script(f"window.scrollTo({0}, {0})")
@@ -56,48 +61,69 @@ def main():
                 driver.find_element(
                     By.CSS_SELECTOR, "button[data-test='sportsSportsMain2TabButton']"
                 ).click()
+                time.sleep(1)
 
-            # driver.execute_script(f"window.scrollTo({0}, {scrollLevel})")
             driver.execute_script(f"window.scrollTo({0}, {scrollLevel})")
             tournamentLists = driver.find_elements(
-                By.CSS_SELECTOR, "a.f147sodr.f73eam3.f17kgnnr.f4ru8xs.f1rtv67w"
+                By.CSS_SELECTOR, "a.f147sodr.f73eam3.f1t66jgs.f4ru8xs.f1rtv67w"
             )
             time.sleep(2)
             actions.move_to_element(tournamentLists[x]).perform()
-            # wait.until(
-            #     EC.element_to_be_clickable(
-            #         (
-            #             By.CSS_SELECTOR,
-            #             "a.f147sodr.f73eam3.f17kgnnr.f4ru8xs.f1rtv67w:nth-of-type(%d)"
-            #             % (x + 1),
-            #         )
-            #     )
-            # )
-
-            print(tournamentLists[x].location)
-
-            scrollLevel += 50
-
+            # print(tournamentLists[x].location, {x})
+            scrollLevel += 1.5 * tournamentLists[x].size["height"]
             time.sleep(1)
+            # if "Futures" in driver.find_element(By.CSS_SELECTOR, "span.f1ybkwy0").text:
+            #     continue
+
             tournamentLists[x].click()
+            time.sleep(1)
+            tournamentNames = driver.find_elements(
+                By.CSS_SELECTOR, "div[class='f8xi195']"
+            )
+            namesOdds = driver.find_elements(By.CSS_SELECTOR, "div[class='faxe22p']")
+
+            for y in range(len(tournamentNames)):
+                tournamentName = (
+                    tournamentNames[y]
+                    .find_element(By.CSS_SELECTOR, "span[class='fi1dv9f fw739jz']")
+                    .get_attribute("innerHTML")
+                    .split("<")[0]
+                )
+                print(tournamentName)
+
+            for z in range(len(namesOdds)):
+                names = namesOdds[z].find_elements(
+                    By.CSS_SELECTOR, "span[class='f1k9b6du']"
+                )
+                print(names[0].text, names[1].text)
+                odds = namesOdds[z].find_elements(
+                    By.CSS_SELECTOR, "span[class='fheif50']"
+                )
+                print(odds[0].text, odds[1].text)
+
+                # data.append(
+                #     Game(
+                #         tournamentName,
+                #         names[0].text,
+                #         odds[0].text,
+                #         names[1].text,
+                #         odds[1].text,
+                #     )
+                # )
+
             time.sleep(1)
             driver.back()
 
-            time.sleep(1)
         except Exception as e:
-            print(f"the value of {x} doesn't pint")
+            print(f"index {x} is unclickable")
 
+    # printMatch(data)
     driver.quit()
 
-    # wrong, need to research
 
-    # match = namedtuple('match', ['name1', 'name2'])
-
-    # data = match([], [])
-    # data.name1.append((1, 2))
-    # data.name1.extend([(3, 4), (5, 6)])
-
-    # print(data)  # prints MyDataType(name1=[(1, 2), (3, 4), (5, 6)], name2=[])
+def printMatch(data):
+    for match in data:
+        print(match)
 
 
 if __name__ == "__main__":
